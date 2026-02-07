@@ -5,7 +5,7 @@ import urllib.error
 import re
 
 # Конфигурация
-BOT_API_URL = "https://nursing-julieta-freedownloadvideobot-970ab5d7.koyeb.app/webhook"
+BOT_API_URL = "https://nursing-julieta-freedownloadvideobot-970ab5d7.koyeb.app/"
 BACKEND_SECRET = "fredo_secret_key_2025"
 
 # Поддерживаемые платформы
