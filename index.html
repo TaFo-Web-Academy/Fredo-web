@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FREDO - Video Downloader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .supported-platforms {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .supported-platforms h3 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .platform-tag {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .status.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-top-color: #0c5460;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .info-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .info-box ul {
+            color: #856404;
+            font-size: 13px;
+            padding-left: 20px;
+        }
+
+        .info-box ul li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>FREDO</h1>
+            <p>Скачивай видео из любой платформы бесплатно</p>
+        </div>
+
+        <div class="supported-platforms">
+            <h3>🌐 Поддерживаемые платформы</h3>
+            <div class="platforms">
+                <span class="platform-tag">YouTube</span>
+                <span class="platform-tag">Instagram</span>
+                <span class="platform-tag">TikTok</span>
+                <span class="platform-tag">Twitter/X</span>
+                <span class="platform-tag">Facebook</span>
+                <span class="platform-tag">VK</span>
+                <span class="platform-tag">Reddit</span>
+                <span class="platform-tag">Pinterest</span>
+                <span class="platform-tag">+17 других</span>
+            </div>
+        </div>
+
+        <form id="downloadForm">
+            <div class="input-group">
+                <label for="videoUrl">📎 Вставь ссылку на видео</label>
+                <input 
+                    type="url" 
+                    id="videoUrl" 
+                    name="videoUrl" 
+                    placeholder="https://youtube.com/watch?v=..." 
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">
+                🚀 Скачать видео
+            </button>
+        </form>
+
+        <div id="status" class="status"></div>
+
+        <div class="info-box">
+            <h4>📌 Как это работает?</h4>
+            <ul>
+                <li>Вставь ссылку на видео</li>
+                <li>Нажми "Скачать видео"</li>
+                <li>Получи видео в Telegram боте @Free_Download_Video_bot</li>
+                <li>Безлимитно! Без ограничений! 🎉</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            Made with ❤️ by Mustafoshokh | FREDO © 2025
+        </div>
+    </div>
+
+    <script>
+        // Конфигурация API
+        const API_URL = 'https://YOUR-USERNAME.pythonanywhere.com/api/download';
+        const TELEGRAM_BOT = '@Free_Download_Video_bot';
+
+        const form = document.getElementById('downloadForm');
+        const statusDiv = document.getElementById('status');
+        const submitBtn = document.getElementById('submitBtn');
+        const urlInput = document.getElementById('videoUrl');
+
+        // Обработка отправки формы
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const videoUrl = urlInput.value.trim();
+            
+            if (!videoUrl) {
+                showStatus('error', '❌ Пожалуйста, введи ссылку на видео');
+                return;
+            }
+
+            // Валидация URL
+            if (!isValidUrl(videoUrl)) {
+                showStatus('error', '❌ Неверный формат ссылки');
+                return;
+            }
+
+            // Отправка запроса
+            await downloadVideo(videoUrl);
+        });
+
+        // Функция валидации URL
+        function isValidUrl(url) {
+            try {
+                new URL(url);
+                return true;
+            } catch {
+                return false;
+            }
+        }
+
+        // Функция скачивания видео
+        async function downloadVideo(url) {
+            try {
+                // Показать загрузку
+                showStatus('loading', '<span class="loader"></span>Отправляем запрос...');
+                submitBtn.disabled = true;
+
+                // Отправка на API
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: url,
+                        user_id: '7249758488' // Твой Telegram ID
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showStatus('success', `✅ Отлично! Видео отправляется в бот ${TELEGRAM_BOT}. Проверь Telegram!`);
+                    urlInput.value = '';
+                } else {
+                    showStatus('error', `❌ Ошибка: ${data.message || 'Не удалось обработать запрос'}`);
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('error', `❌ Ошибка соединения. Проверь интернет или попробуй позже.`);
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Функция отображения статуса
+        function showStatus(type, message) {
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+            
+            // Автоскрытие для success
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 8000);
+            }
+        }
+
+        // Автофокус на поле ввода
+        window.addEventListener('load', () => {
+            urlInput.focus();
+        });
+    </script>
+</body>
+</html>
